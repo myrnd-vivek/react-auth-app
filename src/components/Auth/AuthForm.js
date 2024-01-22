@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { useTokenContext } from "../../context/tokenContext";
+import { useHistory } from "react-router-dom"
 
 import classes from "./AuthForm.module.css";
 
@@ -10,6 +11,8 @@ const AuthForm = () => {
 	const passwordInputRef = useRef(null);
 
 	const { addToken } = useTokenContext();
+	const history = useHistory()
+	
 
 	const apiKey = process.env.REACT_APP_API_KEY;
 
@@ -41,12 +44,16 @@ const AuthForm = () => {
 			});
 			const result = await resp.json();
 			if (result.error) {
+				setIsLoading(false);
 				alert(result.error.message);
+				return;
 			}
-			console.log(result);
+
 			const { idToken } = result;
 			addToken({ token: idToken });
 			setIsLoading(false);
+			history.push("/profile")
+			
 		} catch (error) {
 			setIsLoading(false);
 			alert(error.message);

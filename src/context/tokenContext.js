@@ -1,4 +1,4 @@
-const { createContext, useContext, useState } = require("react");
+const { createContext, useContext, useState, useEffect } = require("react");
 
 const TokenContext = createContext({
 	token: "",
@@ -15,7 +15,15 @@ const TokenProvider = ({ children }) => {
 
 	const removeToken = () => {
 		setToken(null);
+    localStorage.removeItem("token")
 	};
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setToken(token)
+    }
+  },[])
 
 	return (
 		<TokenContext.Provider value={{ token, addToken, removeToken }}>

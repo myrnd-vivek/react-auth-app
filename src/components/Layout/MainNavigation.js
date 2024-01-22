@@ -10,7 +10,7 @@ const MainNavigation = () => {
 
 	const logout = () => {
 		removeToken();
-		history.push("/");
+		history.push("/auth");
 	};
 	return (
 		<header className={classes.header}>

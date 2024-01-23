@@ -1,4 +1,5 @@
 const { createContext, useContext, useState, useEffect } = require("react");
+import { useHistory } from "react-router-dom";
 
 const TokenContext = createContext({
 	token: "",
@@ -8,9 +9,12 @@ const TokenContext = createContext({
 
 const TokenProvider = ({ children }) => {
 	const [token, setToken] = useState(null);
+  const history = useHistory();
 
 	const addToken = ({ token }) => {
 		setToken(token);
+    localStorage.setItem("token",token);
+    localStorage.setItem("tokenStoreTime", new Date().getTime());
 	};
 
 	const removeToken = () => {
@@ -20,8 +24,16 @@ const TokenProvider = ({ children }) => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
-      setToken(token)
+    const tokenStoreTime = localStorage.getItem("tokenStoreTime");
+    if (token && tokenStoreTime) {
+      const expirationTime = parseInt(tokenStoreTime) + (5 * 60 * 1000); 
+      if(new Date().getTime() < expirationTime) {
+        setToken(token)
+      } else {
+        removeToken();
+        alert("Login Again !!");
+        history.push("/auth")
+      }
     }
   },[])
 

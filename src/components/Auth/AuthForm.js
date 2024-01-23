@@ -51,7 +51,6 @@ const AuthForm = () => {
 
 			const { idToken } = result;
 			addToken({ token: idToken });
-			localStorage.setItem("token",idToken);
 			setIsLoading(false);
 			history.push("/profile")
 
